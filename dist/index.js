@@ -29978,12 +29978,15 @@ async function installSeshmark() {
     core.addPath(`${process.env.HOME}/.local/bin`);
 }
 async function getReportData(baseSha, headSha) {
+    // Convert SHAs to dates (seshmark stats/query need dates, not SHAs)
+    const baseDate = (await execAndCapture('git', ['log', '-1', '--format=%ci', baseSha])).trim();
+    const headDate = (await execAndCapture('git', ['log', '-1', '--format=%ci', headSha])).trim();
     const statsOutput = await execAndCapture('seshmark', [
-        'stats', '--since', baseSha, '--until', headSha, '--format', 'json'
+        'stats', '--since', baseDate, '--until', headDate, '--format', 'json'
     ]);
     const stats = JSON.parse(statsOutput);
     const queryOutput = await execAndCapture('seshmark', [
-        'query', '--since', baseSha, '--until', headSha, '--format', 'json'
+        'query', '--since', baseDate, '--until', headDate, '--format', 'json'
     ]);
     const commits = JSON.parse(queryOutput);
     return {
