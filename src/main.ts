@@ -29,7 +29,9 @@ async function execAndCapture(cmd: string, args: string[]): Promise<string> {
 }
 
 async function installSeshmark(): Promise<void> {
-  await exec('bash', ['-c', 'curl -fsSL https://seshmark.github.io/seshmark/install.sh | bash']);
+  await exec('bash', ['-c', 'curl -fsSL https://seshmark.github.io/seshmark/install.sh | bash || true']);
+  // Force re-install the hook even if one already exists
+  await exec('bash', ['-c', 'seshmark hook install --force 2>/dev/null || true']);
   core.addPath(`${process.env.HOME}/.local/bin`);
 }
 

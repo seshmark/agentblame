@@ -29972,7 +29972,9 @@ async function execAndCapture(cmd, args) {
     return stdout;
 }
 async function installSeshmark() {
-    await (0, exec_1.exec)('bash', ['-c', 'curl -fsSL https://seshmark.github.io/seshmark/install.sh | bash']);
+    await (0, exec_1.exec)('bash', ['-c', 'curl -fsSL https://seshmark.github.io/seshmark/install.sh | bash || true']);
+    // Force re-install the hook even if one already exists
+    await (0, exec_1.exec)('bash', ['-c', 'seshmark hook install --force 2>/dev/null || true']);
     core.addPath(`${process.env.HOME}/.local/bin`);
 }
 async function getReportData(baseSha, headSha) {
