@@ -28,3 +28,7 @@ outputs:
     description: 'Percentage of AI commits in PR'
   agents-found:
     description: 'Comma-separated list of agents found'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
