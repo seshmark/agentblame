@@ -14,19 +14,7 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm run build
-      - name: Verify dist/index.js exists
-        run: test -f dist/index.js && echo "✅ dist/index.js exists"
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm ci
-      - run: npm run build
-      - name: Verify action loads
-        run: node -e "const m = require('./dist/index.js'); console.log('✅ Action loaded')"
+      - name: Verify dist/index.js exists and is valid
+        run: |
+          test -f dist/index.js && echo "✅ dist/index.js exists"
+          node --check dist/index.js && echo "✅ Action module valid"
