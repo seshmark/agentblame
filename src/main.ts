@@ -50,6 +50,14 @@ async function getReportData(baseSha: string, headSha: string): Promise<ReportDa
   ]);
   const commits = JSON.parse(queryOutput);
 
+  // Enrich commits with author names (direct from git, not from seshmark query)
+  for (const c of commits) {
+    if (!c.author || c.author === '?' || c.author === 'undefined') {
+      const author = (await execAndCapture('git', ['log', '-1', '--format=%an', c.hash])).trim();
+      if (author) c.author = author;
+    }
+  }
+
   return {
     total_commits: stats.total_commits || 0,
     ai_commits: stats.ai_commits || 0,
@@ -91,7 +99,7 @@ function formatReport(data: ReportData): string {
     md += '\n';
 
     for (const c of data.commits) {
-      md += `| ${c.hash.substring(0, 7)} | @${c.author} | ${c.ai_agent || 'human'} |`;
+      md += `| ${c.hash.substring(0, 7)} | ${c.author || '—'} | ${c.ai_agent || 'human'} |`;
       if (showModels) md += ` ${c.ai_model || '\u2014'} |`;
       if (showSessions) md += ` ${c.ai_session ? c.ai_session.substring(0, 20) + '...' : '\u2014'} |`;
       md += '\n';
