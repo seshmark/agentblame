@@ -1,0 +1,30 @@
+name: 'Seshmark Agent Blame'
+description: 'Auto-generated AI attribution report for every Pull Request'
+author: 'seshmark'
+branding:
+  icon: 'git-commit'
+  color: 'green'
+
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+    default: ${{ github.token }}
+  show-models:
+    description: 'Include model names in report'
+    required: false
+    default: 'true'
+  show-sessions:
+    description: 'Include session IDs in report'
+    required: false
+    default: 'false'
+  fail-on-unknown-agent:
+    description: 'Fail check if unknown AI agent detected'
+    required: false
+    default: 'false'
+
+outputs:
+  ai-percent:
+    description: 'Percentage of AI commits in PR'
+  agents-found:
+    description: 'Comma-separated list of agents found'
